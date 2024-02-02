@@ -12,7 +12,9 @@
 __MACOSX/
 
 # Sensitive Data
+.env
 data/imported_transactions
 data/temp
 data/categorized_businesses.csv
 data/transactions_history.csv
+helpers/
