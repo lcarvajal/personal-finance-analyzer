@@ -1,7 +1,8 @@
 import subprocess
 
-def main():
+# This doesnt work yet...
 
+def main():
     cash_transactions_script_path = "cash_transactions_storage.py"
     subprocess.run(["python3", cash_transactions_script_path])
 

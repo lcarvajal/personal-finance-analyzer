@@ -1,4 +1,12 @@
 '''
+
+Setup commands:
+- Activate environment: source accountingenv/bin/activate
+- Deactivate environment: deactivate
+- Display installed packages: pip list
+- Capture current dependencies: pip freeze > requirements.txt
+- Install current dependencies: pip install -r requirements.txt
+
 This program takes temporary credit card transaction data, cleans it up, and adds it to a CSV file containing a history of all credit card transactions.
 
 Details:
