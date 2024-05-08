@@ -11,6 +11,9 @@
 .Trashes
 __MACOSX/
 
+# Virtual environment
+accountingenv/
+
 # Sensitive Data
 .env
 data/imported_transactions
