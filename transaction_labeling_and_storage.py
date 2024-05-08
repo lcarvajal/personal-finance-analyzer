@@ -1,23 +1,5 @@
 '''
-
-Setup commands:
-- Activate environment: source accountingenv/bin/activate
-- Deactivate environment: deactivate
-- Display installed packages: pip list
-- Capture current dependencies: pip freeze > requirements.txt
-- Install current dependencies: pip install -r requirements.txt
-
 This program takes temporary credit card transaction data, cleans it up, and adds it to a CSV file containing a history of all credit card transactions.
-
-Details:
-- Credit card transaction data is supported for Capital One.
-- The data gets categorized based on mappings done by Lukas. If the mapping for a business doesn't exist, it uses ChatGPT to categorize it.
-
-To-do:
-1. Add support for inputting cash transactions on Notion
-2. Create unit tests to ensure program works as expected
-3. Add support for Citi Card
-4. Add support for cash transactions
 '''
 
 from datetime import datetime
