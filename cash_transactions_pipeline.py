@@ -11,7 +11,7 @@ def main():
     NOTION_API_KEY = os.getenv(c.NOTION_API_KEY)
 
     # Database ID of the table database in Notion
-    database_id = os.getenv('CASH_TRANSACTIONS_DATABASE_ID')
+    database_id = os.getenv(c.CASH_TRANSACTIONS_DATABASE_ID_KEY)
 
     # URL for making API requests
     url = f'https://api.notion.com/v1/databases/{database_id}/query'
