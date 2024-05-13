@@ -50,6 +50,13 @@ def extract_capital_one_transactions(csv):
 
     return df
 
+def extract_transaction_history():
+    # Add rows from transaction history to current transactions data frame.
+    if os.path.exists(c.TRANSACTIONS_HISTORY_FILE_PATH):
+        return pd.read_csv(c.TRANSACTIONS_HISTORY_FILE_PATH)
+    else:
+        raise FileExistsError("Transaction history file missing.")
+
 # Transform
 
 def clean_capital_one_transactions(df):
@@ -58,6 +65,14 @@ def clean_capital_one_transactions(df):
     df = df.dropna(subset=[c.DEBIT])
     df.drop('Posted Date', axis=1, inplace=True)
     return df
+
+def clean_transaction_history(df):
+    # Remove transactions that have already been added.
+    df = df.drop_duplicates(subset=[c.DATE, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT, c.SEQUENCE])
+    # Sort by date.
+    df = df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
+    return df
+
 
 def categorize_transactions(df):
     df[c.CATEGORY] = df[c.CATEGORY].str.lower()
@@ -144,6 +159,14 @@ def check_for_approved_categories(df):
 
 # Load
 
+def load_transactions(df):
+    # Get today's date
+    today_date = datetime.today().strftime('%Y-%m-%d')
+
+    # Create filename with today's date
+    filename = f"transactions_{today_date}.csv"
+    df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
+
 def send_csv_files_to_trash():
     """Moves CSV files in temp directory to trash."""
     for file in CSV_FILES:
@@ -168,32 +191,17 @@ def main():
         df = clean_capital_one_transactions(df)
         df = categorize_transactions(df)
         df = set_unique_identifiers(df)
+        df['category'] = df.apply(get_category_from_api, axis=1)
         transactions_df = pd.concat([transactions_df, df])
 
     if transactions_df.empty:
         return
     else:
-        # Get today's date
-        today_date = datetime.today().strftime('%Y-%m-%d')
+        load_transactions(transactions_df)
 
-        # Create filename with today's date
-        filename = f"transactions_{today_date}.csv"
-        transactions_df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
-
-        # Update missing categories using llm
-        transactions_df['category'] = transactions_df.apply(get_category_from_api, axis=1)
-
-        # Add rows from transaction history to current transactions data frame.
-        if os.path.exists(c.TRANSACTIONS_HISTORY_FILE_PATH):
-            transaction_history_df = pd.read_csv(c.TRANSACTIONS_HISTORY_FILE_PATH)
-            transactions_df = pd.concat([transactions_df, transaction_history_df], ignore_index=True)
-
-        # Remove transactions that have already been added.
-        transactions_df = transactions_df.drop_duplicates(subset=[c.DATE, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT, c.SEQUENCE])
-
-        # Sort by date.
-        transactions_df = transactions_df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
-
+        transaction_history_df = extract_transaction_history()
+        transaction_history_df = pd.concat([transactions_df, transaction_history_df], ignore_index=True)
+        transaction_history_df = clean_transaction_history(transaction_history_df)
         # Save for long-term storage.
         transactions_df.to_csv(c.TRANSACTIONS_HISTORY_FILE_PATH, index=False)
 
