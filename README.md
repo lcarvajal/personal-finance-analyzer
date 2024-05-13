@@ -26,8 +26,6 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 - Uses a [Notion Integration](https://www.notion.so/integrations) so that my wife and I can continue tracking cash transactions on Notion.
 - Analyzes transaction history in `analysis.ipynb`.
 
-This program imports credit card transactions and categorizes them in a way Lukas wants. The categorized data can then be used to analyze in `analysis.ipynb`.
-
 ## Support
 - Capital One transactions
 
