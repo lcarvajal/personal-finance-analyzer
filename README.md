@@ -1,10 +1,35 @@
 # Accounting
 
 ## About
+
+This project gives me an overview of my spending using the categories I like to use for transactions from multiple credit cards and bank accounts.
+
+<img src="img/transactions.png" width=500>
+<figcaption>An example of how Capital One transactions don't get categorized the way I like 👹</figcaption>
+
+### Problem
+
+1. As someone who uses checking accounts and credit cards from different countries and banks, I run into the issue of easily getting an overview of my spending for any month / year in a single report. Personal finance apps (like [Mint](https://mint.intuit.com/)) don't let you connect foreign bank accounts.
+2. Banks and credit cards don't categorize transactions the way I like.
+3. Cash transactions go unaccounted for with apps provided by banks.
+
+### Developing a Solution
+
+For the longest time, I used mental math to add transactions from my accounts and tracked the numbers on [Notion](https://www.notion.so). With that process:
+- I made mistakes from time-to-time.
+- I could never easily create visuals to better understand my spending habits.
+- I couldn't easily compare spending year to year.
+
+Since I aimed to get this project up-and-running asap, wanted to keep financial data safe, and didnt want to invest time into building a UI, this app:
+- Stores categorized businesses in `categorized_businesses.csv`, leverages OpenAI to categorize new businesses, and falls back on user input when unsure.
+- Stores all past transactions in my iCloud folder so that it's all backed up. 
+- Uses a [Notion Integration](https://www.notion.so/integrations) so that my wife and I can continue tracking cash transactions on Notion.
+- Analyzes transaction history in `analysis.ipynb`.
+
 This program imports credit card transactions and categorizes them in a way Lukas wants. The categorized data can then be used to analyze in `analysis.ipynb`.
 
-- Credit card transaction data is supported for Capital One.
-- The data gets categorized based on mappings done by Lukas. If the mapping for a business doesn't exist, it uses the openai API to categorize it.
+## Support
+- Capital One transactions
 
 ## Setup
 1. Create a virtual environment: `python -m venv accoutningenv`
