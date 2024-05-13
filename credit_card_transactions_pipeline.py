@@ -8,32 +8,16 @@ import os
 from openai import OpenAI
 import pandas as pd
 import send2trash
+import constant as c
 
 load_dotenv()
+OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
 
-# Constants
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-BUSINESS_OR_PERSON = 'business_or_person'
-BUSINESS_OR_PERSON_ORIGINAL= 'business_or_person_original'
-CARD_NUMBER = 'card_number'
-CATEGORY = 'category'
-CATEGORY_ORIGINAL = 'category_original'
-CREDIT = 'credit'
-DATE = 'date'
-DEBIT = 'debit'
-SEQUENCE = 'sequence'
-
-DATA_DIRECTORY_PATH = 'data/'
-TEMP_DIRECTORY_PATH = DATA_DIRECTORY_PATH + 'temp/'
-IMPORTED_TRANSACTIONS_DIRECTORY_PATH = DATA_DIRECTORY_PATH + 'imported_transactions/'
-TRANSACTIONS_HISTORY_FILE_PATH = DATA_DIRECTORY_PATH + 'transactions_history.csv'
-
-TEMP_FILES = [f for f in os.listdir(TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(TEMP_DIRECTORY_PATH, f))]
+TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
 CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')] 
 
 def get_categories_df():
-    df = pd.read_csv(DATA_DIRECTORY_PATH + 'categories.csv')
+    df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categories.csv')
     column_to_drop = 'Unnamed: 1'
     if column_to_drop in df.columns:
         df.drop(column_to_drop, axis=1, inplace=True)
@@ -52,39 +36,39 @@ def get_capital_one_dataframe(csv):
     df = pd.read_csv(csv, encoding='latin-1')
     
     df = df.rename(columns={
-        'Transaction Date': DATE, 
-        'Card No.': CARD_NUMBER, 
-        'Description': BUSINESS_OR_PERSON_ORIGINAL, 
-        'Category': CATEGORY, 
-        'Debit': DEBIT, 
-        'Credit': CREDIT })
+        'Transaction Date': c.DATE, 
+        'Card No.': c.CARD_NUMBER, 
+        'Description': c.BUSINESS_OR_PERSON_ORIGINAL, 
+        'Category': c.CATEGORY, 
+        'Debit': c.DEBIT, 
+        'Credit': c.CREDIT })
     
     # Check dataframe is in expected format.
-    expected_columns = [DATE, CARD_NUMBER, BUSINESS_OR_PERSON_ORIGINAL, CATEGORY, DEBIT, CREDIT]
+    expected_columns = [c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.CATEGORY, c.DEBIT, c.CREDIT]
     if not all(col in df.columns for col in expected_columns):
         raise ValueError("DataFrame is missing one or more expected columns.")
     
-    df[BUSINESS_OR_PERSON_ORIGINAL] = df[BUSINESS_OR_PERSON_ORIGINAL].str.lower()
-    df[BUSINESS_OR_PERSON] = df[BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
+    df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
+    df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
 
-    df[CATEGORY] = df[CATEGORY].str.lower()
+    df[c.CATEGORY] = df[c.CATEGORY].str.lower()
 
     # Merge transactions with categorized_businesses_df to get correct categories
-    categorized_businesses_df = pd.read_csv(DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
-    df = pd.merge(df, categorized_businesses_df, on=BUSINESS_OR_PERSON, how='left')
+    categorized_businesses_df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
+    df = pd.merge(df, categorized_businesses_df, on=c.BUSINESS_OR_PERSON, how='left')
 
     df = df.rename(columns={
-        'category_x': CATEGORY_ORIGINAL, 
-        'category_y': CATEGORY})
+        'category_x': c.CATEGORY_ORIGINAL, 
+        'category_y': c.CATEGORY})
     
     # Merge with categories to get the correct category names
-    df = pd.merge(df, CATEGORIES_DF, on=CATEGORY, how='left')
+    df = pd.merge(df, CATEGORIES_DF, on=c.CATEGORY, how='left')
 
-    df = df.dropna(subset=[DEBIT])
+    df = df.dropna(subset=[c.DEBIT])
     df.drop('Posted Date', axis=1, inplace=True)
 
     # Create a unique identifier for each transaction.
-    df[SEQUENCE] = df.groupby([DATE, CARD_NUMBER, BUSINESS_OR_PERSON_ORIGINAL, DEBIT]).cumcount() + 1
+    df[c.SEQUENCE] = df.groupby([c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT]).cumcount() + 1
 
     return df
 
@@ -92,17 +76,17 @@ def get_valid_category():
     while True:
         user_input = input("Enter a category: ").strip().lower()
 
-        if user_input in CATEGORIES_DF[CATEGORY].str.lower().values:
+        if user_input in CATEGORIES_DF[c.CATEGORY].str.lower().values:
             return user_input
         else:
             print("Invalid category. Please try again.")
 
 def get_category_from_api(row):
-    category = row[CATEGORY]
+    category = row[c.CATEGORY]
 
     if pd.isna(category):
-        business = row[BUSINESS_OR_PERSON]
-        business_original = row[BUSINESS_OR_PERSON_ORIGINAL]
+        business = row[c.BUSINESS_OR_PERSON]
+        business_original = row[c.BUSINESS_OR_PERSON_ORIGINAL]
 
         client = OpenAI()
 
@@ -117,22 +101,22 @@ def get_category_from_api(row):
 
         updated_category = completion.choices[0].message.content
 
-        if CATEGORIES_DF[CATEGORY].str.contains(updated_category).any():
+        if CATEGORIES_DF[c.CATEGORY].str.contains(updated_category).any():
             print(f"Chat GPT labeled {business} as {updated_category}")
         else:
             print()
             print(f"CHATGPT could not categorize the business correctly: {business_original}")
-            print(f"Original category: {row[CATEGORY_ORIGINAL]}")
-            print(f"Amount: ${row[DEBIT]}")
+            print(f"Original category: {row[c.CATEGORY_ORIGINAL]}")
+            print(f"Amount: ${row[c.DEBIT]}")
             updated_category = get_valid_category()
             
         # Add new category to business:category mappings.
-        new_record = pd.DataFrame({BUSINESS_OR_PERSON: [business], CATEGORY: [updated_category]})
+        new_record = pd.DataFrame({c.BUSINESS_OR_PERSON: [business], c.CATEGORY: [updated_category]})
 
-        categorized_businesses_df = pd.read_csv(DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
+        categorized_businesses_df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
         categorized_businesses_df = pd.concat([categorized_businesses_df, new_record], ignore_index=True)
         categorized_businesses_df = categorized_businesses_df.drop_duplicates()
-        categorized_businesses_df.to_csv(DATA_DIRECTORY_PATH + 'categorized_businesses.csv', index=False)
+        categorized_businesses_df.to_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv', index=False)
 
         return updated_category
     else:
@@ -140,8 +124,8 @@ def get_category_from_api(row):
 
 def check_for_approved_categories(df):
     """Checks if DataFrame contains approved categories."""
-    categories_set = set(CATEGORIES_DF[CATEGORY])
-    unique_categories_df = set(df[CATEGORY])
+    categories_set = set(CATEGORIES_DF[c.CATEGORY])
+    unique_categories_df = set(df[c.CATEGORY])
     categories_not_in_csv = unique_categories_df - categories_set
 
     if categories_not_in_csv:
@@ -157,7 +141,7 @@ def get_transactions_df():
     transactions_df = pd.DataFrame()
 
     for file in CSV_FILES:
-        df = get_capital_one_dataframe(TEMP_DIRECTORY_PATH + file)
+        df = get_capital_one_dataframe(c.TEMP_DIRECTORY_PATH + file)
         transactions_df = pd.concat([transactions_df, df])
     
     return transactions_df
@@ -165,7 +149,7 @@ def get_transactions_df():
 def send_csv_files_to_trash():
     """Moves CSV files in temp directory to trash."""
     for file in CSV_FILES:
-        file_path = TEMP_DIRECTORY_PATH + file
+        file_path = c.TEMP_DIRECTORY_PATH + file
 
         # Check if the file exists before attempting to delete
         if os.path.exists(file_path):
@@ -188,24 +172,24 @@ def main():
 
         # Create filename with today's date
         filename = f"transactions_{today_date}.csv"
-        transactions_df.to_csv(IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
+        transactions_df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
 
         # Update missing categories using llm
         transactions_df['category'] = transactions_df.apply(get_category_from_api, axis=1)
 
         # Add rows from transaction history to current transactions data frame.
-        if os.path.exists(TRANSACTIONS_HISTORY_FILE_PATH):
-            transaction_history_df = pd.read_csv(TRANSACTIONS_HISTORY_FILE_PATH)
+        if os.path.exists(c.TRANSACTIONS_HISTORY_FILE_PATH):
+            transaction_history_df = pd.read_csv(c.TRANSACTIONS_HISTORY_FILE_PATH)
             transactions_df = pd.concat([transactions_df, transaction_history_df], ignore_index=True)
 
         # Remove transactions that have already been added.
-        transactions_df = transactions_df.drop_duplicates(subset=[DATE, BUSINESS_OR_PERSON_ORIGINAL, DEBIT, SEQUENCE])
+        transactions_df = transactions_df.drop_duplicates(subset=[c.DATE, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT, c.SEQUENCE])
 
         # Sort by date.
-        transactions_df = transactions_df.sort_values(by=[DATE, CATEGORY, BUSINESS_OR_PERSON], ascending=[False, True, True])
+        transactions_df = transactions_df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
 
         # Save for long-term storage.
-        transactions_df.to_csv(TRANSACTIONS_HISTORY_FILE_PATH, index=False)
+        transactions_df.to_csv(c.TRANSACTIONS_HISTORY_FILE_PATH, index=False)
 
         check_for_approved_categories(transactions_df)
         send_csv_files_to_trash()

@@ -1,22 +1,8 @@
 import os
 import pandas as pd
+import constant as c
 import requests
 from dotenv import load_dotenv
-
-BUSINESS_OR_PERSON = 'business_or_person'
-BUSINESS_OR_PERSON_ORIGINAL= 'business_or_person_original'
-CARD_NUMBER = 'card_number'
-CATEGORY = 'category'
-CATEGORY_ORIGINAL = 'category_original'
-CREDIT = 'credit'
-DATE = 'date'
-DEBIT = 'debit'
-SEQUENCE = 'sequence'
-
-DATA_DIRECTORY_PATH = 'data/'
-TEMP_DIRECTORY_PATH = DATA_DIRECTORY_PATH + 'temp/'
-IMPORTED_TRANSACTIONS_DIRECTORY_PATH = DATA_DIRECTORY_PATH + 'imported_transactions/'
-TRANSACTIONS_HISTORY_FILE_PATH = DATA_DIRECTORY_PATH + 'transactions_history.csv'
 
 def main():
     load_dotenv()
@@ -65,43 +51,43 @@ def main():
         # Create DataFrame from extracted data
 
         data = {
-            DATE: date_list,
-            CATEGORY_ORIGINAL: category_list,
-            CATEGORY: category_list,
-            DEBIT: debit_list,
-            CREDIT: credit_list,
-            SEQUENCE: 1,
-            BUSINESS_OR_PERSON_ORIGINAL: person_or_business_list,
-            BUSINESS_OR_PERSON: person_or_business_list
+            c.DATE: date_list,
+            c.CATEGORY_ORIGINAL: category_list,
+            c.CATEGORY: category_list,
+            c.DEBIT: debit_list,
+            c.CREDIT: credit_list,
+            c.SEQUENCE: 1,
+            c.BUSINESS_OR_PERSON_ORIGINAL: person_or_business_list,
+            c.BUSINESS_OR_PERSON: person_or_business_list
         }
         df = pd.DataFrame(data)
 
         # Lowercase the values
-        df[BUSINESS_OR_PERSON_ORIGINAL] = df[BUSINESS_OR_PERSON_ORIGINAL].str.lower()
-        df[BUSINESS_OR_PERSON] = df[BUSINESS_OR_PERSON].str.lower()
-        df[CATEGORY_ORIGINAL] = df[CATEGORY_ORIGINAL].str.lower()
-        df[CATEGORY] = df[CATEGORY].str.lower()
+        df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
+        df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON].str.lower()
+        df[c.CATEGORY_ORIGINAL] = df[c.CATEGORY_ORIGINAL].str.lower()
+        df[c.CATEGORY] = df[c.CATEGORY].str.lower()
 
         # Replace empty values in 'debit' and 'credit' columns with NaN
-        df[DEBIT] = df[DEBIT].apply(lambda x: float(x) if x is not None else float('nan'))
-        df[CREDIT] = df[CREDIT].apply(lambda x: float(x) if x is not None else float('nan'))
+        df[c.DEBIT] = df[c.DEBIT].apply(lambda x: float(x) if x is not None else float('nan'))
+        df[c.CREDIT] = df[c.CREDIT].apply(lambda x: float(x) if x is not None else float('nan'))
 
         # Print DataFrame
         print(df)
 
          # Add rows from transaction history to current transactions data frame.
-        if os.path.exists(TRANSACTIONS_HISTORY_FILE_PATH):
-            transaction_history_df = pd.read_csv(TRANSACTIONS_HISTORY_FILE_PATH)
+        if os.path.exists(c.TRANSACTIONS_HISTORY_FILE_PATH):
+            transaction_history_df = pd.read_csv(c.TRANSACTIONS_HISTORY_FILE_PATH)
             transactions_df = pd.concat([df, transaction_history_df], ignore_index=True)
 
         # Remove transactions that have already been added.
-        transactions_df = transactions_df.drop_duplicates(subset=[DATE, BUSINESS_OR_PERSON_ORIGINAL, DEBIT, SEQUENCE])
+        transactions_df = transactions_df.drop_duplicates(subset=[c.DATE, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT, c.SEQUENCE])
 
         # Sort by date.
-        transactions_df = transactions_df.sort_values(by=[DATE, CATEGORY, BUSINESS_OR_PERSON], ascending=[False, True, True])
+        transactions_df = transactions_df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
 
         # Save for long-term storage.
-        transactions_df.to_csv(TRANSACTIONS_HISTORY_FILE_PATH, index=False)
+        transactions_df.to_csv(c.TRANSACTIONS_HISTORY_FILE_PATH, index=False)
     else:
         # Print error message if request failed
         print(f'Error: {response.status_code} - {response.text}')
