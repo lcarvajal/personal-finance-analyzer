@@ -8,7 +8,7 @@ def main():
     load_dotenv()
 
     # Integration token obtained from Notion
-    NOTION_API_KEY = os.getenv('NOTION_API_KEY')
+    NOTION_API_KEY = os.getenv(c.NOTION_API_KEY)
 
     # Database ID of the table database in Notion
     database_id = os.getenv('CASH_TRANSACTIONS_DATABASE_ID')
