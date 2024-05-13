@@ -29,9 +29,9 @@ def get_categories_df():
 
 CATEGORIES_DF = get_categories_df()
 
-# Functions
+# Extract
 
-def get_capital_one_dataframe(csv):
+def extract_capital_one_transactions(csv):
     """Reads a Capital One CSV file and preprocesses it."""
     df = pd.read_csv(csv, encoding='latin-1')
     
@@ -47,10 +47,19 @@ def get_capital_one_dataframe(csv):
     expected_columns = [c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.CATEGORY, c.DEBIT, c.CREDIT]
     if not all(col in df.columns for col in expected_columns):
         raise ValueError("DataFrame is missing one or more expected columns.")
-    
+
+    return df
+
+# Transform
+
+def clean_capital_one_transactions(df):
     df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
     df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
+    df = df.dropna(subset=[c.DEBIT])
+    df.drop('Posted Date', axis=1, inplace=True)
+    return df
 
+def categorize_transactions(df):
     df[c.CATEGORY] = df[c.CATEGORY].str.lower()
 
     # Merge transactions with categorized_businesses_df to get correct categories
@@ -63,13 +72,12 @@ def get_capital_one_dataframe(csv):
     
     # Merge with categories to get the correct category names
     df = pd.merge(df, CATEGORIES_DF, on=c.CATEGORY, how='left')
+    
+    return df
 
-    df = df.dropna(subset=[c.DEBIT])
-    df.drop('Posted Date', axis=1, inplace=True)
-
+def set_unique_identifiers(df):
     # Create a unique identifier for each transaction.
     df[c.SEQUENCE] = df.groupby([c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT]).cumcount() + 1
-
     return df
 
 def get_valid_category():
@@ -134,17 +142,7 @@ def check_for_approved_categories(df):
     else:
         print("Dataframe contains no unapproved categories. Import successful!")
 
-def get_transactions_df():
-    """Processes all CSV files in the temp directory."""
-
-    # Add all transactions to one dataframe
-    transactions_df = pd.DataFrame()
-
-    for file in CSV_FILES:
-        df = get_capital_one_dataframe(c.TEMP_DIRECTORY_PATH + file)
-        transactions_df = pd.concat([transactions_df, df])
-    
-    return transactions_df
+# Load
 
 def send_csv_files_to_trash():
     """Moves CSV files in temp directory to trash."""
@@ -162,7 +160,15 @@ def send_csv_files_to_trash():
 # Main
 
 def main():
-    transactions_df = get_transactions_df()
+    # Extract data by looping through CSVs in temp and add them all to one dataframe
+    transactions_df = pd.DataFrame()
+
+    for file in CSV_FILES:
+        df = extract_capital_one_transactions(c.TEMP_DIRECTORY_PATH + file)
+        df = clean_capital_one_transactions(df)
+        df = categorize_transactions(df)
+        df = set_unique_identifiers(df)
+        transactions_df = pd.concat([transactions_df, df])
 
     if transactions_df.empty:
         return
