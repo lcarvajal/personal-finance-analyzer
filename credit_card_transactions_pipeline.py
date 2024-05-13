@@ -133,17 +133,19 @@ def get_category_from_api(row):
             print(f"Amount: ${row[c.DEBIT]}")
             updated_category = get_valid_category()
             
-        # Add new category to business:category mappings.
-        new_record = pd.DataFrame({c.BUSINESS_OR_PERSON: [business], c.CATEGORY: [updated_category]})
-
-        categorized_businesses_df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
-        categorized_businesses_df = pd.concat([categorized_businesses_df, new_record], ignore_index=True)
-        categorized_businesses_df = categorized_businesses_df.drop_duplicates()
-        categorized_businesses_df.to_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv', index=False)
+        add_business_to_category_mapping(business, updated_category)
 
         return updated_category
     else:
         return category
+    
+def add_business_to_category_mapping(business, category):
+    new_record = pd.DataFrame({c.BUSINESS_OR_PERSON: [business], c.CATEGORY: [category]})
+    categorized_businesses_df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv')
+    categorized_businesses_df = pd.concat([categorized_businesses_df, new_record], ignore_index=True)
+    categorized_businesses_df = categorized_businesses_df.drop_duplicates()
+    categorized_businesses_df.to_csv(c.DATA_DIRECTORY_PATH + 'categorized_businesses.csv', index=False)
+
 
 def check_for_approved_categories(df):
     """Checks if DataFrame contains approved categories."""
