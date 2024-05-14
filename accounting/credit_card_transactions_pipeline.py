@@ -1,5 +1,5 @@
 '''
-This program takes temporary credit card transaction data, cleans it up, and adds it to a CSV file containing a history of all credit card transactions.
+This pipeline takes temporary credit card transaction data, cleans it up, and loads it to a CSV file containing a history of all credit card transactions.
 '''
 
 from datetime import datetime
@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 import pandas as pd
-import send2trash
+
+import accounting.constant as c
+import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
 from accounting.transaction_history_pipeline import load_transaction_history
-import accounting.constant as c
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
@@ -65,19 +66,6 @@ def load_transactions(df):
     filename = f"transactions_{today_date}.csv"
     df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
 
-def send_csv_files_to_trash():
-    """Moves CSV files in temp directory to trash."""
-    for file in CSV_FILES:
-        file_path = c.TEMP_DIRECTORY_PATH + file
-
-        # Check if the file exists before attempting to delete
-        if os.path.exists(file_path):
-            # Move the file to the trash
-            send2trash.send2trash(file_path)
-            print(f"File '{file_path}' moved to trash successfully.")
-        else:
-            print(f"File '{file_path}' does not exist.")
-
 # Main
 
 def main():
@@ -99,7 +87,7 @@ def main():
         load_transaction_history(transactions_df)
 
         check_for_approved_categories(transactions_df)
-        send_csv_files_to_trash()
+        tool.send_csv_files_to_trash(CSV_FILES)
 
 if __name__ == "__main__":
     main()
