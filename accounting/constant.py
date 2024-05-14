@@ -14,6 +14,14 @@ DATE = 'date'
 DEBIT = 'debit'
 SEQUENCE = 'sequence'
 
+# Capital One columns
+CAP_ONE_TRANSACTION_DATE = 'Transaction Date'
+CAP_ONE_CARD_NUMBER = 'Card No.'
+CAP_ONE_DESCRIPTION = 'Description'
+CAP_ONE_CATEGORY = 'Category'
+CAP_ONE_DEBIT = 'Debit'
+CAP_ONE_CREDIT = 'Credit'
+
 # Directory and file paths
 DATA_DIRECTORY_PATH = 'data/'
 TEMP_DIRECTORY_PATH = DATA_DIRECTORY_PATH + 'temp/'

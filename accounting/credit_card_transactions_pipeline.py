@@ -25,17 +25,17 @@ def extract_capital_one_transactions(csv):
     df = pd.read_csv(csv, encoding='latin-1')
     
     df = df.rename(columns={
-        'Transaction Date': c.DATE, 
-        'Card No.': c.CARD_NUMBER, 
-        'Description': c.BUSINESS_OR_PERSON_ORIGINAL, 
-        'Category': c.CATEGORY, 
-        'Debit': c.DEBIT, 
-        'Credit': c.CREDIT })
+        c.CAP_ONE_TRANSACTION_DATE: c.DATE, 
+        c.CAP_ONE_CARD_NUMBER: c.CARD_NUMBER, 
+        c.CAP_ONE_DESCRIPTION: c.BUSINESS_OR_PERSON_ORIGINAL, 
+        c.CAP_ONE_CATEGORY: c.CATEGORY, 
+        c.CAP_ONE_DEBIT: c.DEBIT, 
+        c.CAP_ONE_CREDIT: c.CREDIT })
     
     # Check dataframe is in expected format.
     expected_columns = [c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.CATEGORY, c.DEBIT, c.CREDIT]
     if not all(col in df.columns for col in expected_columns):
-        raise ValueError("DataFrame is missing one or more expected columns.")
+        raise TypeError(f"{csv} contains one or more unexpected column names.")
 
     return df
 
