@@ -9,6 +9,7 @@ from openai import OpenAI
 import pandas as pd
 import send2trash
 from transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
+from transaction_history_pipeline import load_transaction_history
 import constant as c
 
 load_dotenv()
@@ -38,13 +39,6 @@ def extract_capital_one_transactions(csv):
 
     return df
 
-def extract_transaction_history():
-    # Add rows from transaction history to current transactions data frame.
-    if os.path.exists(c.TRANSACTIONS_HISTORY_FILE_PATH):
-        return pd.read_csv(c.TRANSACTIONS_HISTORY_FILE_PATH)
-    else:
-        raise FileExistsError("Transaction history file missing.")
-
 # Transform
 
 def clean_capital_one_transactions(df):
@@ -52,13 +46,6 @@ def clean_capital_one_transactions(df):
     df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
     df = df.dropna(subset=[c.DEBIT])
     df.drop('Posted Date', axis=1, inplace=True)
-    return df
-
-def clean_transaction_history(df):
-    # Remove transactions that have already been added.
-    df = df.drop_duplicates(subset=[c.DATE, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT, c.SEQUENCE])
-    # Sort by date.
-    df = df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
     return df
 
 def set_unique_identifiers(df):
@@ -107,12 +94,7 @@ def main():
         return
     else:
         load_transactions(transactions_df)
-
-        transaction_history_df = extract_transaction_history()
-        transaction_history_df = pd.concat([transactions_df, transaction_history_df], ignore_index=True)
-        transaction_history_df = clean_transaction_history(transaction_history_df)
-        # Save for long-term storage.
-        transactions_df.to_csv(c.TRANSACTIONS_HISTORY_FILE_PATH, index=False)
+        load_transaction_history(transactions_df)
 
         check_for_approved_categories(transactions_df)
         send_csv_files_to_trash()
