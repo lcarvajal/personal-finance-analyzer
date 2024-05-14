@@ -8,9 +8,9 @@ import os
 from openai import OpenAI
 import pandas as pd
 import send2trash
-from transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
-from transaction_history_pipeline import load_transaction_history
-import constant as c
+from accounting.transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
+from accounting.transaction_history_pipeline import load_transaction_history
+import accounting.constant as c
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)

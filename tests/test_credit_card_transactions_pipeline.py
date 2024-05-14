@@ -1,7 +1,9 @@
 import unittest
-import accounting.constant as c
-import accounting.credit_card_transactions_pipeline as cc_pipeline
 import pandas as pd
+
+from accounting import constant as c
+from accounting import credit_card_transactions_pipeline as cc_pipeline
+
 
 class TestCreditCardTransactionsPipeline(unittest.TestCase):
     def setUp(self):

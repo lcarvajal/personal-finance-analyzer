@@ -1,4 +1,4 @@
-import constant as c
+import accounting.constant as c
 import os
 import pandas as pd
 
