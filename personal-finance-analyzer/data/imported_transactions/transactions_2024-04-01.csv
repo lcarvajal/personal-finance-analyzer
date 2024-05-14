@@ -1,0 +1,54 @@
+date,card_number,business_or_person_original,category_original,debit,credit,business_or_person,category,sequence
+2024-03-29,5739,lidl dankt 496,merchandise,4.09,,lidl dankt ,groceries,1
+2024-03-29,5739,wiener linien 2378,other travel,2.82,,wiener linien ,car/bike/metro,1
+2024-03-29,5739,sumup *caffecouture,dining,5.42,,sumup *caffecouture,,1
+2024-03-28,5739,sumup *baharak & nima,dining,15.18,,sumup *baharak & nima,,1
+2024-03-28,5739,billa dankt,merchandise,12.63,,billa dankt,groceries,1
+2024-03-27,5739,spar fil. 4214,merchandise,32.74,,spar fil. ,groceries,1
+2024-03-26,5739,billa dankt,merchandise,2.1,,billa dankt,groceries,1
+2024-03-26,5739,wiener linien 766,other travel,2.6,,wiener linien ,car/bike/metro,1
+2024-03-26,5739,wiener linien 2178,other travel,2.82,,wiener linien ,car/bike/metro,1
+2024-03-25,5739,hofer dankt,merchandise,80.62,,hofer dankt,groceries,1
+2024-03-23,5739,billa dankt,merchandise,16.52,,billa dankt,groceries,1
+2024-03-23,5739,billa dankt,merchandise,13.0,,billa dankt,groceries,1
+2024-03-22,5739,obi bau- und heimwerke,merchandise,13.12,,obi bau- und heimwerke,home,1
+2024-03-21,8035,lidl dankt 496,merchandise,39.27,,lidl dankt ,groceries,1
+2024-03-21,5739,sumup  *the pelican co,dining,11.96,,sumup  *the pelican co,dining,1
+2024-03-21,5739,spar fil. 4825,merchandise,1.88,,spar fil. ,groceries,1
+2024-03-21,5739,wiener linien 2266,other travel,2.83,,wiener linien ,car/bike/metro,1
+2024-03-21,5739,oebb ticket automat,other travel,2.61,,oebb ticket automat,travel,1
+2024-03-21,5739,sumup  *ikonomu konsta,merchandise,9.79,,sumup  *ikonomu konsta,,1
+2024-03-20,8035,dm-fil. 0602,merchandise,6.48,,dm-fil. ,groceries,1
+2024-03-20,5739,wiener linien 2318,other travel,2.83,,wiener linien ,car/bike/metro,1
+2024-03-19,8035,bipa dankt,merchandise,5.43,,bipa dankt,groceries,1
+2024-03-18,5739,wiener linien 2356,other travel,2.83,,wiener linien ,car/bike/metro,1
+2024-03-16,5739,charlie p's,dining,51.24,,charlie p's,dining,1
+2024-03-16,5739,billa dankt,merchandise,72.89,,billa dankt,groceries,1
+2024-03-16,5739,spar fil. 4039,merchandise,7.48,,spar fil. ,groceries,1
+2024-03-16,5739,wiener linien 2200,other travel,2.83,,wiener linien ,car/bike/metro,1
+2024-03-16,5739,sumup  *kaffeefabrik s,dining,3.92,,sumup  *kaffeefabrik s,,1
+2024-03-13,5739,wiener linien 2036,other travel,2.85,,wiener linien ,car/bike/metro,1
+2024-03-13,5739,billa dankt,merchandise,3.27,,billa dankt,groceries,1
+2024-03-13,5739,wiener linien 2335,other travel,2.85,,wiener linien ,car/bike/metro,1
+2024-03-12,5739,bartholomaeus apotheke,health care,105.28,,bartholomaeus apotheke,health care,1
+2024-03-12,5739,billa dankt,merchandise,14.96,,billa dankt,groceries,1
+2024-03-12,5739,lidl dankt 496,merchandise,15.14,,lidl dankt ,groceries,1
+2024-03-10,5739,sport & fun halle otta,other services,8.79,,sport & fun halle otta,entertainment,1
+2024-03-09,5739,hofer dankt,merchandise,67.4,,hofer dankt,groceries,1
+2024-03-08,5739,obi bau- und heimwerke,merchandise,9.39,,obi bau- und heimwerke,home,1
+2024-03-07,8035,lidl dankt 593,merchandise,9.92,,lidl dankt ,groceries,1
+2024-03-06,5739,billa dankt,merchandise,7.97,,billa dankt,groceries,1
+2024-03-01,5739,wiener linien 2165,other travel,2.82,,wiener linien ,car/bike/metro,1
+2024-03-02,8035,xxxlutz wien 15,merchandise,11.92,,xxxlutz wien ,home,1
+2024-03-03,5739,sport & fun halle otta,other services,8.68,,sport & fun halle otta,entertainment,1
+2024-03-02,5739,frau mayer,dining,5.42,,frau mayer,dining,1
+2024-03-02,5739,frau mayer,dining,16.27,,frau mayer,dining,1
+2024-03-02,5739,frau mayer,dining,5.42,,frau mayer,dining,2
+2024-03-02,5739,billa dankt,merchandise,32.55,,billa dankt,groceries,1
+2024-03-02,5739,wiener linien 2255,other travel,2.82,,wiener linien ,car/bike/metro,1
+2024-03-01,5739,peek & cloppenburg,merchandise,13.02,,peek & cloppenburg,merchandise,1
+2024-02-29,5739,billa dankt,merchandise,52.16,,billa dankt,groceries,1
+2024-02-29,5739,hofer dankt,merchandise,111.21,,hofer dankt,groceries,1
+2024-02-28,8035,bipa dankt,merchandise,5.84,,bipa dankt,groceries,1
+2024-02-28,5739,interspar fil. 8200,merchandise,8.66,,interspar fil. ,groceries,1
+2024-02-28,5739,wiener linien 2337,other travel,2.83,,wiener linien ,car/bike/metro,1

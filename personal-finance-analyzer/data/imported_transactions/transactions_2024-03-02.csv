@@ -1,0 +1,31 @@
+date,card_number,business_or_person_original,category_original,debit,credit,business_or_person,category,sequence
+2024-02-27,5739,hernals. kebap pizza,dining,5.65,,hernals. kebap pizza,dining,1
+2024-02-23,5739,spielbar,dining,10.84,,spielbar,,1
+2024-02-23,5739,billa dankt,merchandise,2.66,,billa dankt,groceries,1
+2024-02-23,5739,ankerbrot,dining,1.36,,ankerbrot,dining,1
+2024-02-22,5739,billa dankt,merchandise,6.96,,billa dankt,groceries,1
+2024-02-21,5739,hofer dankt,merchandise,86.74,,hofer dankt,groceries,1
+2024-02-21,5739,billa dankt,merchandise,3.85,,billa dankt,groceries,1
+2024-02-18,5739,bäckerei martini,dining,7.55,,bäckerei martini,dining,1
+2024-02-17,5739,spar fil. 4214,merchandise,29.66,,spar fil. ,groceries,1
+2024-02-16,5739,obi bau-und heimwerker,merchandise,17.0,,obi bau-und heimwerker,,1
+2024-02-14,5739,billa dankt,merchandise,26.71,,billa dankt,groceries,1
+2024-02-13,5739,spar fil. 4214,merchandise,16.61,,spar fil. ,groceries,1
+2024-02-10,5739,wiener linien 229,other travel,2.59,,wiener linien ,car/bike/metro,1
+2024-02-10,5739,oebb ticket automat,other travel,2.59,,oebb ticket automat,travel,1
+2024-02-09,8035,billa online shop,merchandise,226.71,,billa online shop,groceries,1
+2024-02-09,5739,billa dankt,merchandise,3.96,,billa dankt,groceries,1
+2024-02-07,5739,sport & fun halle otta,other services,8.61,,sport & fun halle otta,,1
+2024-02-07,5739,interspar fil. 8360,merchandise,3.63,,interspar fil. ,groceries,1
+2024-02-06,5739,billa dankt,merchandise,11.82,,billa dankt,groceries,1
+2024-02-06,5739,hernals. kebap pizza,dining,6.26,,hernals. kebap pizza,dining,1
+2024-02-05,5739,würstelstand albertina,dining,22.78,,würstelstand albertina,,1
+2024-02-03,5739,billa dankt,merchandise,21.51,,billa dankt,groceries,1
+2024-02-03,5739,billa dankt,merchandise,6.32,,billa dankt,groceries,1
+2024-01-30,5739,bipa dankt,merchandise,9.77,,bipa dankt,groceries,1
+2024-01-30,5739,hernals. kebap pizza,dining,5.64,,hernals. kebap pizza,dining,1
+2024-01-30,5739,hofer dankt,merchandise,2.16,,hofer dankt,groceries,1
+2024-01-30,5739,hofer dankt,merchandise,87.13,,hofer dankt,groceries,1
+2024-02-04,3363,apple.com/bill,entertainment,0.99,,apple.com/bill,merchandise,1
+2024-02-03,3363,nextbike by tier,other travel,1.31,,nextbike by tier,car/bike/metro,1
+2024-02-01,3363,adidasat www.adidas.at,merchandise,119.45,,adidasat www.adidas.at,merchandise,1
