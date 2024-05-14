@@ -15,6 +15,5 @@ class TestCreditCardTransactionsPipeline(unittest.TestCase):
         with self.assertRaises(TypeError):
             cc_pipeline.extract_capital_one_transactions(self.invalid_transactions_file_name)
 
-
 if __name__ == '__main__':
     unittest.main()

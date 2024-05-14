@@ -14,6 +14,18 @@ DATE = 'date'
 DEBIT = 'debit'
 SEQUENCE = 'sequence'
 
+TRANSACTION_COLUMNS = {
+    DATE, 
+    CARD_NUMBER, 
+    BUSINESS_OR_PERSON_ORIGINAL, 
+    CATEGORY_ORIGINAL, 
+    DEBIT, 
+    CREDIT, 
+    BUSINESS_OR_PERSON, 
+    CATEGORY, 
+    SEQUENCE
+}
+
 # Capital One columns
 CAP_ONE_TRANSACTION_DATE = 'Transaction Date'
 CAP_ONE_CARD_NUMBER = 'Card No.'
