@@ -21,7 +21,7 @@ CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
 # Extract
 
 def extract_capital_one_transactions(csv):
-    """Reads a Capital One CSV file and preprocesses it."""
+    """Extracts a Capital One CSV file into a dataframe."""
     df = pd.read_csv(csv, encoding='latin-1')
     
     df = df.rename(columns={
@@ -42,6 +42,7 @@ def extract_capital_one_transactions(csv):
 # Transform
 
 def clean_capital_one_transactions(df):
+    """Drop data not needed for transaction analysis and reformat business names to keep naming consistent."""
     df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
     df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
     df = df.dropna(subset=[c.DEBIT])
@@ -49,13 +50,14 @@ def clean_capital_one_transactions(df):
     return df
 
 def set_unique_identifiers(df):
-    # Create a unique identifier for each transaction.
+    """Create a unique identifier to avoid readding existing transactions to transaction history."""
     df[c.SEQUENCE] = df.groupby([c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.DEBIT]).cumcount() + 1
     return df
 
 # Load
 
 def load_transactions(df):
+    """Store imported transactions in CSVs as backups."""
     # Get today's date
     today_date = datetime.today().strftime('%Y-%m-%d')
 
@@ -87,7 +89,7 @@ def main():
         df = clean_capital_one_transactions(df)
         df = categorize_transactions(df)
         df = set_unique_identifiers(df)
-        df['category'] = df.apply(get_category_from_api, axis=1)
+        df[c.CATEGORY] = df.apply(get_category_from_api, axis=1)
         transactions_df = pd.concat([transactions_df, df])
 
     if transactions_df.empty:
