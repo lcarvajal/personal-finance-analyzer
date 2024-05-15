@@ -1,6 +1,11 @@
-import accounting.constant as c
 import os
 import pandas as pd
+import pandera as pa
+from pandera.typing import DataFrame
+
+import accounting.constant as c
+from accounting.schemas.transaction_schema import TransactionSchema
+
 
 def extract_transaction_history():
     # Add rows from transaction history to current transactions data frame.
@@ -16,7 +21,8 @@ def clean_transaction_history(df):
     df = df.sort_values(by=[c.DATE, c.CATEGORY, c.BUSINESS_OR_PERSON], ascending=[False, True, True])
     return df
 
-def load_transaction_history(df):
+@pa.check_types(lazy=True)
+def load_transaction_history(df: DataFrame[TransactionSchema]):
     transaction_history_df = extract_transaction_history()
     transaction_history_df = pd.concat([df, transaction_history_df], ignore_index=True)
     transaction_history_df = clean_transaction_history(transaction_history_df)
