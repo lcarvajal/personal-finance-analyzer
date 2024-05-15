@@ -15,6 +15,9 @@ def extract_categories():
 
 categories_df = extract_categories()
 
+def get_valid_categories():
+    return set(categories_df[c.CATEGORY])
+
 def categorize_transactions(df):
     df[c.CATEGORY] = df[c.CATEGORY].str.lower()
 
@@ -30,18 +33,6 @@ def categorize_transactions(df):
     df = pd.merge(df, categories_df, on=c.CATEGORY, how='left')
     
     return df
-
-def check_for_approved_categories(df):
-    """Checks if DataFrame contains approved categories."""
-    categories_set = set(categories_df[c.CATEGORY])
-    unique_categories_df = set(df[c.CATEGORY])
-    categories_not_in_csv = unique_categories_df - categories_set
-
-    if categories_not_in_csv:
-        print("The DataFrame contains categories not existing in the 'categories.csv' file:")
-        print(categories_not_in_csv)
-    else:
-        print("Dataframe contains no unapproved categories. Import successful!")
 
 def get_category_from_api(row):
     category = row[c.CATEGORY]
@@ -70,7 +61,7 @@ def get_category_from_api(row):
             print(f"CHATGPT could not categorize the business correctly: {business_original}")
             print(f"Original category: {row[c.CATEGORY_ORIGINAL]}")
             print(f"Amount: ${row[c.DEBIT]}")
-            updated_category = get_valid_category()
+            updated_category = get_valid_category_from_user()
             
         load_business_to_category_mapping(business, updated_category)
 
@@ -78,7 +69,7 @@ def get_category_from_api(row):
     else:
         return category
 
-def get_valid_category():
+def get_valid_category_from_user():
     while True:
         user_input = input("Enter a category: ").strip().lower()
 

@@ -3,6 +3,7 @@ import pandera as pa
 from pandera.typing import DataFrame, Series
 
 from accounting import constant as c
+from accounting.transaction_category import get_valid_categories
 
 class TransactionSchema(pa.DataFrameModel):
     date: object
@@ -11,7 +12,7 @@ class TransactionSchema(pa.DataFrameModel):
     category_original: object
     debit: float
     business_or_person: object
-    category: object
+    category: object = pa.Field(isin=get_valid_categories())
     sequence: int
 
 class CapitalOneTransactionSchema(pa.DataFrameModel):

@@ -11,7 +11,7 @@ from pandera.typing import DataFrame
 
 import accounting.constant as c
 import accounting.tool as tool
-from accounting.transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
+from accounting.transaction_category import categorize_transactions, get_category_from_api
 from accounting.transaction_history_pipeline import load_transaction_history
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
 
