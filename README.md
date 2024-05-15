@@ -35,13 +35,11 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 3. Create a Jupyter Kernal: `python -m ipykernel install --user --name=accoutningenv` 
 
 ## How to run
-1. Activate environment: `source accountingenv/bin/activate`
-2. Install dependencies: `pip install -r requirements.txt`
+1. Install dependencies: `pip install -r requirements.txt`
 3. Place downloaded transactions in `data/temp/`
 3. Run `python import_latest_transactions.py`
 
 ## Extra commands
-- Deactivate environment: `deactivate`
 - Display installed packages: `pip list`
 - Capture current dependencies: `pip freeze > requirements.txt`
 - Run a module `python -m accounting.credit_card_transactions_pipeline`
