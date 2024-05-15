@@ -32,7 +32,7 @@ def extract_capital_one_transactions(csv):
 # Transform
 
 @pa.check_types(lazy=True)
-def clean_capital_one_transactions(df: DataFrame[CapitalOneTransactionSchema]):
+def transform_capital_one_transactions(df: DataFrame[CapitalOneTransactionSchema]):
     """Drop data not needed for transaction analysis and reformat business names to keep naming consistent."""
 
     df = df.rename(columns={
@@ -73,7 +73,7 @@ def main():
 
     for file in CSV_FILES:
         df = extract_capital_one_transactions(c.TEMP_DIRECTORY_PATH + file)
-        df = clean_capital_one_transactions(df)
+        df = transform_capital_one_transactions(df)
         df = categorize_transactions(df)
         df = set_unique_identifiers(df)
         df[c.CATEGORY] = df.apply(get_category_from_api, axis=1)
