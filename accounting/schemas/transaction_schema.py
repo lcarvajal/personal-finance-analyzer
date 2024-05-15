@@ -4,6 +4,15 @@ from pandera.typing import DataFrame, Series
 
 from accounting import constant as c
 
+class TransactionSchema(pa.DataFrameModel):
+    date: object
+    card_number: int
+    business_or_person_original: object
+    category_original: object
+    debit: float
+    business_or_person: object
+    category: object
+    sequence: int
 
 class CapitalOneTransactionSchema(pa.DataFrameModel):
     transaction_date: object = pa.Field(alias=c.CAP_ONE_TRANSACTION_DATE)

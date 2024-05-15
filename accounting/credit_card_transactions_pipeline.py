@@ -13,7 +13,7 @@ import accounting.constant as c
 import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
 from accounting.transaction_history_pipeline import load_transaction_history
-from accounting.schemas.transaction_schema import CapitalOneTransactionSchema
+from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
@@ -56,14 +56,15 @@ def set_unique_identifiers(df):
 
 # Load
 
-def load_transactions(df):
+@pa.check_types(lazy=True)
+def load_transactions(df: DataFrame[TransactionSchema]):
     """Store imported transactions in CSVs as backups."""
     # Get today's date
     today_date = datetime.today().strftime('%Y-%m-%d')
 
     # Create filename with today's date
     filename = f"transactions_{today_date}.csv"
-    df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
+    # df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
 
 # Main
 
@@ -83,9 +84,9 @@ def main():
         return
     else:
         load_transactions(transactions_df)
-        load_transaction_history(transactions_df)
+        # load_transaction_history(transactions_df)
 
-        tool.send_to_trash(CSV_FILES)
+        # tool.send_to_trash(CSV_FILES)
 
 if __name__ == "__main__":
     main()
