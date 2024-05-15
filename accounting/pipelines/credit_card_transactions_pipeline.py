@@ -79,10 +79,11 @@ def main():
     else:
         # Create filename with today's date
         today_date = datetime.today().strftime('%Y-%m-%d')
-        filename = f"transactions_{today_date}.csv"
-        filepath = c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename
-        load_transactions(transactions_df, filepath)
-        load_transaction_history(transactions_df)
+        todays_transactions_filename = f"transactions_{today_date}.csv"
+        todays_transactions_filepath = c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + todays_transactions_filename
+        
+        load_transactions(transactions_df, todays_transactions_filepath)
+        load_transaction_history(transactions_df, c.TRANSACTIONS_HISTORY_FILE_PATH)
 
         tool.send_to_trash(CSV_FILES)
 
