@@ -26,7 +26,6 @@ CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
 def extract_capital_one_transactions(csv):
     """Extracts a Capital One CSV file into a dataframe."""
     df = pd.read_csv(csv, encoding='latin-1')
-    print(df.dtypes)
     return df
 
 # Transform
@@ -64,7 +63,7 @@ def load_transactions(df: DataFrame[TransactionSchema]):
 
     # Create filename with today's date
     filename = f"transactions_{today_date}.csv"
-    # df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
+    df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
 
 # Main
 
@@ -84,9 +83,9 @@ def main():
         return
     else:
         load_transactions(transactions_df)
-        # load_transaction_history(transactions_df)
+        load_transaction_history(transactions_df)
 
-        # tool.send_to_trash(CSV_FILES)
+        tool.send_to_trash(CSV_FILES)
 
 if __name__ == "__main__":
     main()
