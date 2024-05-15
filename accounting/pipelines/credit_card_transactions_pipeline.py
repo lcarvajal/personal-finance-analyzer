@@ -56,14 +56,9 @@ def set_unique_identifiers(df):
 # Load
 
 @pa.check_types(lazy=True)
-def load_transactions(df: DataFrame[TransactionSchema]):
+def load_transactions(df: DataFrame[TransactionSchema], filepath: str):
     """Store imported transactions in CSVs as backups."""
-    # Get today's date
-    today_date = datetime.today().strftime('%Y-%m-%d')
-
-    # Create filename with today's date
-    filename = f"transactions_{today_date}.csv"
-    df.to_csv(c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename, index=False)
+    df.to_csv(filepath, index=False)
 
 # Main
 
@@ -82,7 +77,11 @@ def main():
     if transactions_df.empty:
         return
     else:
-        load_transactions(transactions_df)
+        # Create filename with today's date
+        today_date = datetime.today().strftime('%Y-%m-%d')
+        filename = f"transactions_{today_date}.csv"
+        filepath = c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + filename
+        load_transactions(transactions_df, filepath)
         load_transaction_history(transactions_df)
 
         tool.send_to_trash(CSV_FILES)
