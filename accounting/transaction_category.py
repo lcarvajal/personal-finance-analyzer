@@ -1,5 +1,6 @@
-import accounting.constant as c
+from openai import OpenAI
 import pandas as pd
+import accounting.constant as c
 
 def extract_categories():
     df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categories.csv')

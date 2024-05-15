@@ -44,6 +44,7 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 - Deactivate environment: `deactivate`
 - Display installed packages: `pip list`
 - Capture current dependencies: `pip freeze > requirements.txt`
+- Run a module `python -m accounting.credit_card_transactions_pipeline`
 
 ## To-dos
 1. Add support for inputting cash transactions on Notion

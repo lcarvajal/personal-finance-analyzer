@@ -5,26 +5,36 @@ This pipeline takes temporary credit card transaction data, cleans it up, and lo
 from datetime import datetime
 from dotenv import load_dotenv
 import os
-from openai import OpenAI
 import pandas as pd
+import pandera as pa
+from pandera.typing import DataFrame
 
 import accounting.constant as c
 import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, check_for_approved_categories, get_category_from_api
 from accounting.transaction_history_pipeline import load_transaction_history
+from accounting.schemas.transaction_schema import CapitalOneTransactionSchema
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
 
 TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
-CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')] 
+CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
 
 # Extract
 
 def extract_capital_one_transactions(csv):
     """Extracts a Capital One CSV file into a dataframe."""
     df = pd.read_csv(csv, encoding='latin-1')
-    
+    print(df.dtypes)
+    return df
+
+# Transform
+
+@pa.check_types(lazy=True)
+def clean_capital_one_transactions(df: DataFrame[CapitalOneTransactionSchema]):
+    """Drop data not needed for transaction analysis and reformat business names to keep naming consistent."""
+
     df = df.rename(columns={
         c.CAP_ONE_TRANSACTION_DATE: c.DATE, 
         c.CAP_ONE_CARD_NUMBER: c.CARD_NUMBER, 
@@ -33,17 +43,6 @@ def extract_capital_one_transactions(csv):
         c.CAP_ONE_DEBIT: c.DEBIT, 
         c.CAP_ONE_CREDIT: c.CREDIT })
     
-    # Check dataframe is in expected format.
-    expected_columns = [c.DATE, c.CARD_NUMBER, c.BUSINESS_OR_PERSON_ORIGINAL, c.CATEGORY, c.DEBIT, c.CREDIT]
-    if not all(col in df.columns for col in expected_columns):
-        raise TypeError(f"{csv} contains one or more unexpected column names.")
-
-    return df
-
-# Transform
-
-def clean_capital_one_transactions(df):
-    """Drop data not needed for transaction analysis and reformat business names to keep naming consistent."""
     df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
     df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.replace('[\d#]+', '', regex=True)
     df = df.dropna(subset=[c.DEBIT])
@@ -86,8 +85,7 @@ def main():
         load_transactions(transactions_df)
         load_transaction_history(transactions_df)
 
-        check_for_approved_categories(transactions_df)
-        tool.send_csv_files_to_trash(CSV_FILES)
+        tool.send_to_trash(CSV_FILES)
 
 if __name__ == "__main__":
     main()

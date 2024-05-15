@@ -28,6 +28,7 @@ TRANSACTION_COLUMNS = {
 
 # Capital One columns
 CAP_ONE_TRANSACTION_DATE = 'Transaction Date'
+CAP_ONE_POSTED_DATE = "Posted Date"
 CAP_ONE_CARD_NUMBER = 'Card No.'
 CAP_ONE_DESCRIPTION = 'Description'
 CAP_ONE_CATEGORY = 'Category'
