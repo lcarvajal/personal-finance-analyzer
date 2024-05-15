@@ -12,7 +12,7 @@ from pandera.typing import DataFrame
 import accounting.constant as c
 import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, get_category_from_api
-from accounting.pipelines.transaction_history_pipeline import load_transaction_history
+from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
 
 load_dotenv()
@@ -81,9 +81,11 @@ def main():
         today_date = datetime.today().strftime('%Y-%m-%d')
         todays_transactions_filename = f"transactions_{today_date}.csv"
         todays_transactions_filepath = c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + todays_transactions_filename
-        
+
         load_transactions(transactions_df, todays_transactions_filepath)
-        load_transaction_history(transactions_df, c.TRANSACTIONS_HISTORY_FILE_PATH)
+
+        transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
+        transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=transactions_df)
 
         tool.send_to_trash(CSV_FILES)
 
