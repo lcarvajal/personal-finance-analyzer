@@ -1,5 +1,4 @@
 from datetime import datetime
-from dotenv import load_dotenv
 import os
 import pandas as pd
 import pandera as pa
@@ -10,12 +9,6 @@ import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, get_category_from_api
 from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
-
-load_dotenv()
-OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
-
-TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
-CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
 
 class CreditCardTransactionsPipeline:
     """A pipeline that loops through file paths and etls transaction data.
@@ -95,6 +88,9 @@ class CreditCardTransactionsPipeline:
 # Main
 
 def main():
+    TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
+    CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
+
     credit_card_transactions_pipeline = CreditCardTransactionsPipeline(CSV_FILES)
     credit_card_transactions_pipeline.run_pipeline()
 

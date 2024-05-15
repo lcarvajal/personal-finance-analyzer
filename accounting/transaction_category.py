@@ -1,6 +1,11 @@
 from openai import OpenAI
 import pandas as pd
+from dotenv import load_dotenv
+
 import accounting.constant as c
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv(c.OPEN_AI_KEY)
 
 def extract_categories():
     df = pd.read_csv(c.DATA_DIRECTORY_PATH + 'categories.csv')
