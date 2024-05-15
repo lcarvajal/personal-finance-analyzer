@@ -1,7 +1,3 @@
-'''
-This pipeline takes temporary credit card transaction data, cleans it up, and loads it to a CSV file containing a history of all credit card transactions.
-'''
-
 from datetime import datetime
 from dotenv import load_dotenv
 import os
