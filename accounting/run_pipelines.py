@@ -4,7 +4,6 @@ import os
 import accounting.constant as c
 from accounting.pipelines.cash_transactions_pipeline import CashTransactionsPipeline
 from accounting.pipelines.credit_card_transactions_pipeline import CreditCardTransactionsPipeline
-from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 import accounting.tool as tool
 
 
@@ -31,10 +30,6 @@ def run_credit_card_transactions_pipeline():
 
     credit_card_transactions_pipeline = CreditCardTransactionsPipeline(CSV_FILES)
     credit_card_transactions_pipeline.run_pipeline()
-
-    new_transactions_df = credit_card_transactions_pipeline.transactions_df
-    transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
-    transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=new_transactions_df)
 
     tool.send_to_trash(CSV_FILES)
 

@@ -4,6 +4,7 @@ import pandera as pa
 from pandera.typing import DataFrame
 
 import accounting.constant as c
+from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 from accounting.transaction_category import categorize_transactions, get_category_from_api
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
 
@@ -78,6 +79,7 @@ class CreditCardTransactionsPipeline:
             today_date = datetime.today().strftime('%Y-%m-%d')
             todays_transactions_filename = f"transactions_{today_date}.csv"
             todays_transactions_filepath = c.IMPORTED_TRANSACTIONS_DIRECTORY_PATH + todays_transactions_filename
-
-            self.transactions_df = transactions_df
             self.load_transactions(transactions_df, todays_transactions_filepath)
+
+            transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
+            transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=transactions_df)
