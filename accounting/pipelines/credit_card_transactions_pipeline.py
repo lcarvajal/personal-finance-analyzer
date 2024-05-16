@@ -13,12 +13,10 @@ class CreditCardTransactionsPipeline:
 
     Attributes:
         file_paths ([str]): The file paths containing all the transaction data,
-        transactions_df (DataFrame): The cleaned up data frame loaded at the end of the pipeline.
     """
 
     def __init__(self, transaction_file_paths):
         self.file_paths = transaction_file_paths
-        self.transactions_df = pd.DataFrame()
 
     # Extract
     def extract_capital_one_transactions(self, file_path):
