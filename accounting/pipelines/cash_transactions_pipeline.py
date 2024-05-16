@@ -1,8 +1,12 @@
 import pandas as pd
+import numpy as np
+import pandera as pa
+from pandera.typing import DataFrame
 import requests
 
 import accounting.constant as c
 from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
+from accounting.schemas.transaction_schema import CashTransactionSchema, TransactionSchema
 
 class CashTransactionsPipeline:
     """A pipeline that extracts cash transactions stored on Notion and loads them into transaction history.
@@ -54,20 +58,28 @@ class CashTransactionsPipeline:
             print(f'Error: {response.status_code} - {response.text}')
             raise BrokenPipeError("Error extracting cash transactions from Notion.")
     
-    def clean_transactions(self, df):
+    @pa.check_types(lazy=True)
+    def clean_transactions(self, df: DataFrame[CashTransactionSchema]):
          # Lowercase values
         df[c.BUSINESS_OR_PERSON_ORIGINAL] = df[c.BUSINESS_OR_PERSON_ORIGINAL].str.lower()
         df[c.BUSINESS_OR_PERSON] = df[c.BUSINESS_OR_PERSON].str.lower()
         df[c.CATEGORY_ORIGINAL] = df[c.CATEGORY_ORIGINAL].str.lower()
         df[c.CATEGORY] = df[c.CATEGORY].str.lower()
 
-        # Replace empty values in 'debit' and 'credit' columns with NaN
+        # Replace values that shoulnd't have a value with NaN
         df[c.DEBIT] = df[c.DEBIT].apply(lambda x: float(x) if x is not None else float('nan'))
         df[c.CREDIT] = df[c.CREDIT].apply(lambda x: float(x) if x is not None else float('nan'))
+        df[c.CARD_NUMBER] = -1
+
+        # Update value types
+        df[c.DEBIT] = df[c.DEBIT].astype(float)
+        df[c.CREDIT] = df[c.CREDIT].astype(float)
+        df[c.CARD_NUMBER] = df[c.CARD_NUMBER].astype(int)
 
         return df
     
-    def load_transactions_to_transaction_history(self, df):
+    @pa.check_types(lazy=True)
+    def load_transactions_to_transaction_history(self, df: DataFrame[TransactionSchema]):
         transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
         transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=df)         
 
