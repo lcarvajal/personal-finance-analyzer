@@ -20,6 +20,8 @@ class CashTransactionsPipeline:
         self.url = url
         self.headers = headers
     
+    # Extract
+
     def extract_transactions(self):
         response = requests.post(self.url, headers=self.headers)
 
@@ -58,6 +60,8 @@ class CashTransactionsPipeline:
             print(f'Error: {response.status_code} - {response.text}')
             raise BrokenPipeError("Error extracting cash transactions from Notion.")
     
+    # Transform
+
     @pa.check_types(lazy=True)
     def clean_transactions(self, df: DataFrame[CashTransactionSchema]):
          # Lowercase values
@@ -78,6 +82,8 @@ class CashTransactionsPipeline:
 
         return df
     
+    # Load
+
     @pa.check_types(lazy=True)
     def load_transactions_to_transaction_history(self, df: DataFrame[TransactionSchema]):
         transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
