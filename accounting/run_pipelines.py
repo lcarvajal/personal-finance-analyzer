@@ -2,7 +2,9 @@ from dotenv import load_dotenv
 import os
 
 import accounting.constant as c
-from accounting.pipelines import CashTransactionsPipeline, CreditCardTransactionsPipeline, TransactionHistoryPipeline
+from accounting.pipelines.cash_transactions_pipeline import CashTransactionsPipeline
+from accounting.pipelines.credit_card_transactions_pipeline import CreditCardTransactionsPipeline
+from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 import accounting.tool as tool
 
 

@@ -5,7 +5,6 @@ from pandera.typing import DataFrame
 
 import accounting.constant as c
 from accounting.transaction_category import categorize_transactions, get_category_from_api
-from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
 
 class CreditCardTransactionsPipeline:
