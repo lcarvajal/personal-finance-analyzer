@@ -2,7 +2,8 @@ from dotenv import load_dotenv
 import os
 
 import accounting.constant as c
-from accounting.pipelines.cash_transactions_pipeline import CashTransactionsPipeline
+from accounting.pipelines import CashTransactionsPipeline, CreditCardTransactionsPipeline, TransactionHistoryPipeline
+import accounting.tool as tool
 
 
 def run_cash_transactions_pipeline(): 
@@ -20,9 +21,24 @@ def run_cash_transactions_pipeline():
     }
 
     cash_transactions_pipeline = CashTransactionsPipeline(url=url, headers=headers)
+    cash_transactions_pipeline.run_pipeline()
+
+def run_credit_card_transactions_pipeline():
+    TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
+    CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
+
+    credit_card_transactions_pipeline = CreditCardTransactionsPipeline(CSV_FILES)
+    credit_card_transactions_pipeline.run_pipeline()
+
+    new_transactions_df = credit_card_transactions_pipeline.transactions_df
+    transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
+    transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=new_transactions_df)
+
+    tool.send_to_trash(CSV_FILES)
 
 def main():
     run_cash_transactions_pipeline()
+    run_credit_card_transactions_pipeline()
 
 if __name__ == "__main__":
     main()

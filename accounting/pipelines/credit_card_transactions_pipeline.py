@@ -1,11 +1,9 @@
 from datetime import datetime
-import os
 import pandas as pd
 import pandera as pa
 from pandera.typing import DataFrame
 
 import accounting.constant as c
-import accounting.tool as tool
 from accounting.transaction_category import categorize_transactions, get_category_from_api
 from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 from accounting.schemas.transaction_schema import TransactionSchema, CapitalOneTransactionSchema
@@ -84,21 +82,3 @@ class CreditCardTransactionsPipeline:
 
             self.transactions_df = transactions_df
             self.load_transactions(transactions_df, todays_transactions_filepath)
-
-# Main
-
-def main():
-    TEMP_FILES = [f for f in os.listdir(c.TEMP_DIRECTORY_PATH) if os.path.isfile(os.path.join(c.TEMP_DIRECTORY_PATH, f))]
-    CSV_FILES = [s for s in TEMP_FILES if s.lower().endswith('csv')]
-
-    credit_card_transactions_pipeline = CreditCardTransactionsPipeline(CSV_FILES)
-    credit_card_transactions_pipeline.run_pipeline()
-
-    new_transactions_df = credit_card_transactions_pipeline.transactions_df
-    transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
-    transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=new_transactions_df)
-
-    tool.send_to_trash(CSV_FILES)
-
-if __name__ == "__main__":
-    main()
