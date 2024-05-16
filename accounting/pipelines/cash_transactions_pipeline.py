@@ -5,21 +5,24 @@ import accounting.constant as c
 from accounting.pipelines.transaction_history_pipeline import TransactionHistoryPipeline
 
 class CashTransactionsPipeline:
+    """A pipeline that extracts cash transactions stored on Notion and loads them into transaction history.
+
+    Attributes:
+        url (str): The url for the Notion API.
+        headers ({str:str}) The headers for the Notion API request.
+    """
+
     def __init__(self, url, headers):
         self.url = url
         self.headers = headers
     
     def extract_transactions(self):
-        # Make GET request to fetch rows from the database
         response = requests.post(self.url, headers=self.headers)
 
-        # Check if request was successful
         if response.status_code == 200:
-            # Extract rows from the response JSON
             data = response.json()
             rows = data['results']
 
-            # Initialize empty lists to store extracted data
             person_or_business_list = []
             date_list = []
             category_list = []
@@ -48,7 +51,6 @@ class CashTransactionsPipeline:
 
             return pd.DataFrame(data)
         else:
-            # Print error message if request failed
             print(f'Error: {response.status_code} - {response.text}')
             raise BrokenPipeError("Error extracting cash transactions from Notion.")
     
