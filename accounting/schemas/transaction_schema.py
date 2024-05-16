@@ -10,7 +10,18 @@ class TransactionSchema(pa.DataFrameModel):
     card_number: int
     business_or_person_original: object
     category_original: object
-    debit: float
+    debit: float = pa.Field(nullable=True)
+    credit: float = pa.Field(nullable=True)
+    business_or_person: object
+    category: object = pa.Field(isin=get_valid_categories())
+    sequence: int
+
+class CashTransactionSchema(pa.DataFrameModel):
+    date: object
+    business_or_person_original: object
+    category_original: object
+    debit: float = pa.Field(nullable=True)
+    credit: float = pa.Field(nullable=True)
     business_or_person: object
     category: object = pa.Field(isin=get_valid_categories())
     sequence: int
