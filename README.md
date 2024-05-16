@@ -2,10 +2,10 @@
 
 ## About
 
-A data pipeline that extracts transactions, categorizes them using an LLM, and stores them on iCloud for analysis.
+A data pipeline that extracts transactions, categorizes them using an LLM, and loads them in `transactions_history.csv` for analysis.
 
 <img src="img/transactions.png" width=500>
-<figcaption>An example of how Capital One transactions get recategorized.</figcaption>
+<figcaption>An example of recategorized Capital One transactions.</figcaption>
 
 ### Problem
 
@@ -28,6 +28,7 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 
 ## Support
 - Capital One transactions
+- Cash transaction tracked in a Notion database
 
 ## Setup
 1. Create a virtual environment: `python -m venv accoutningenv`
