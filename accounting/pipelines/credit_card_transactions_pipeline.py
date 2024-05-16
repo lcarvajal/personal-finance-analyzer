@@ -95,13 +95,10 @@ def main():
     credit_card_transactions_pipeline.run_pipeline()
 
     new_transactions_df = credit_card_transactions_pipeline.transactions_df
-    if new_transactions_df.empty:
-        return
-    else:
-        transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
-        transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=new_transactions_df)
+    transaction_history_pipeline = TransactionHistoryPipeline(file_path=c.TRANSACTIONS_HISTORY_FILE_PATH)
+    transaction_history_pipeline.run_add_to_history_pipeline(transactions_to_add_df=new_transactions_df)
 
-        tool.send_to_trash(CSV_FILES)
+    tool.send_to_trash(CSV_FILES)
 
 if __name__ == "__main__":
     main()
