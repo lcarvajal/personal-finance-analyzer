@@ -1,19 +1,24 @@
 import unittest
 import pandas as pd
+from pandera.errors import SchemaErrors
 
 import accounting.constant as c
-import accounting.pipelines.credit_card_transactions_pipeline as cc_pipeline
+from accounting.pipelines.credit_card_transactions_pipeline import CreditCardTransactionsPipeline
 
 
 class TestCreditCardTransactionsPipeline(unittest.TestCase):
     def setUp(self):
-        self.extracted_transactions = pd.read_csv('tests/mock_data/valid_capital_one_transactions.csv', encoding='latin-1')
-        self.invalid_transactions_file_name = 'tests/mock_data/invalid_capital_one_transactions.csv'
+        self.credit_card_transactions_pipeline = CreditCardTransactionsPipeline([])
+        # transaction_file_paths='tests/mock_data/valid_capital_one_transactions.csv'
 
 
     def test_unexpected_csv_format(self):
-        with self.assertRaises(TypeError):
-            cc_pipeline.extract_capital_one_transactions(self.invalid_transactions_file_name)
+        invalid_transactions_file_name = 'tests/mock_data/invalid_capital_one_transactions.csv'
+        df = self.credit_card_transactions_pipeline.extract_capital_one_transactions(file_path=invalid_transactions_file_name)
+
+        with self.assertRaises(SchemaErrors):
+            self.credit_card_transactions_pipeline.clean_capital_one_transactions(df)
+            
 
 if __name__ == '__main__':
     unittest.main()

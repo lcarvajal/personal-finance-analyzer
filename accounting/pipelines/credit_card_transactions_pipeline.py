@@ -75,7 +75,7 @@ class CreditCardTransactionsPipeline:
             transactions_df = pd.concat([transactions_df, df])
 
         if transactions_df.empty:
-            print(f"No new transactions found in {CSV_FILES}.")
+            print(f"No new transactions found in {self.file_paths}.")
         else :
             # Create filename with today's date
             today_date = datetime.today().strftime('%Y-%m-%d')
