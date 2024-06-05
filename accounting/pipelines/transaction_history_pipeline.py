@@ -32,7 +32,8 @@ class TransactionHistoryPipeline:
     
     @pa.check_types(lazy=True)
     def load_transaction_history(self, df: DataFrame[TransactionSchema], filepath):
-        self.transaction_history_df.to_csv(filepath, index=False)
+        print(df)
+        df.to_csv(filepath, index=False)
 
     @pa.check_types(lazy=True)
     def run_add_to_history_pipeline(self, transactions_to_add_df: DataFrame[TransactionSchema]):

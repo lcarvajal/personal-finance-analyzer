@@ -13,11 +13,7 @@ __MACOSX/
 .vscode/
 
 # Sensitive Data
-data/imported_transactions
-data/temp
-data/categorized_businesses.csv
-data/transactions_history.csv
-helpers/
+accounting/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

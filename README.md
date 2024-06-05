@@ -38,12 +38,11 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 ## How to run
 1. Install dependencies: `pip install -r requirements.txt`
 3. Place downloaded transactions in `data/temp/`
-3. Run `python import_latest_transactions.py`
+3. Run `python -m accounting.run_pipelines.py`
 
 ## Extra commands
 - Display installed packages: `pip list`
 - Capture current dependencies: `pip freeze > requirements.txt`
-- Run a module `python -m accounting.credit_card_transactions_pipeline`
 
 ## To-dos
 1. Add support for inputting cash transactions on Notion
