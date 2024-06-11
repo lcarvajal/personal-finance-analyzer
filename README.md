@@ -25,6 +25,7 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 - Stores all past transactions in an iCloud folder so that it's all backed up. 
 - Uses a [Notion Integration](https://www.notion.so/integrations) so that my wife and I can continue tracking cash transactions on Notion.
 - Analyzes transaction history in the Jupyter Notebook `analysis.ipynb`.
+- Validates data schemas with [pandera](https://pandera.readthedocs.io/en/stable/)
 
 ## Support
 - Capital One transactions
