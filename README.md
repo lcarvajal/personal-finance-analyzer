@@ -39,7 +39,7 @@ Since I aimed to get this project up-and-running asap, wanted to keep financial 
 ## How to run
 1. Install dependencies: `pip install -r requirements.txt`
 3. Place downloaded transactions in `data/temp/`
-3. Run `python -m accounting.run_pipelines.py`
+3. Run `python -m accounting.run_pipelines`
 
 ## Extra commands
 - Display installed packages: `pip list`
